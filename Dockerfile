@@ -1,20 +1,27 @@
 FROM ubuntu:latest
 
-# Update the system and install dependencies
+# Update package lists and install required system dependencies
 RUN apt-get update && apt-get install -y \
     python3.10 \
     python3-pip \
-    git
+    git \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev
 
-# Install Python dependencies
+# Upgrade pip to the latest version
+RUN python3 -m pip install --upgrade pip
+
+# Install PyYAML
 RUN pip3 install PyYAML
 
-# Copy the feed.py and entrypoint.sh into the container
+# Copy the Python script and entrypoint script into the container
 COPY feed.py /usr/bin/feed.py
 COPY entrypoint.sh /entrypoint.sh
 
 # Make sure entrypoint.sh is executable
 RUN chmod +x /entrypoint.sh
 
-# Define the entrypoint
+# Set the entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
